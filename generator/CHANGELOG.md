@@ -1,7 +1,22 @@
 
+## 9.1.8
+
+- Fixed bug of callAdapter using yield/return incorrectly
+- Fixed issue which generated invalid code for the same path parameter appears multiple times.
+
+  Example:
+
+  ```dart
+  @GET('/image/{imageType}/{id}/{id}_XL.png')
+  Future<HttpResponse<dynamic>> getImage(
+    @Path('imageType') ImageType imageType,
+    @Path('id') String id,
+  );
+  ```
+
 ## 9.1.7
 
-- Introduced CallAdapters, This feature allows adaptation of a Call with return type R into the type of T. 
+- Introduced CallAdapters, This feature allows adaptation of a Call with return type R into the type of T.
   e.g. Future<User> to Future<Result<User>>
 
   Code Example:
@@ -19,14 +34,14 @@
       }
     }
   }
-  
+
   @RestApi()
   abstract class RestClient {
     factory RestClient(Dio dio, {String? baseUrl}) = _RestClient;
 
     @UseCallAdapter(MyCallAdapter)
     @GET('/')
-    Future<User> getTasks();
+    Future<Either<ApiError, User>> getTasks();
   }
 ```
 
@@ -76,7 +91,7 @@
   @http.POST('/path/')
   Future<String> myMethod();
   ```
-  
+
 ## 9.1.2
 
 - Support passing Enums into `TypedExtras`.
@@ -122,6 +137,7 @@
 - Added `@Extras` to pass extra options to dio requests, response, transformer and interceptors.
 
   Example :
+
   ```dart
   @http.POST('/path/')
   Future<String> myMethod(@Extras() Map<String, dynamic> extras);
